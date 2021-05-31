@@ -6,7 +6,8 @@ public class Main {
 
     private static Code collectInput(){
         Scanner scanner = new Scanner(System.in);
-        String[] input = scanner.nextLine().split(" ");
+        System.out.print("Enter your guess:");
+        String[] input = scanner.nextLine().trim().split(" ");
         int[] code = new int[input.length];
         for (int i = 0; i < input.length; i++) {
             code[i] = Integer.parseInt(input[i]);
@@ -19,10 +20,22 @@ public class Main {
         final int COLOURS = 6;
         final int WIDTH = 4;
         final int HEIGHT = 12;
+        boolean won = false;
         final Code solution = new Code(WIDTH,COLOURS);
-        System.out.println(Arrays.toString(solution.getCode()));
-        Code guess = collectInput();
-        int[] result = solution.compare(guess);
-        System.out.println("Correct: "+ result[0] +"\nCorrect Colour: "+ result[1]);
+        Board board = new Board(HEIGHT);
+        while(!board.gameOver()) {
+            Code guess = collectInput();
+            int[] result = solution.compare(guess);
+            board.takeTurn(guess,result);
+            board.printBoard();
+            if (result[0] == 4){
+                won = true;
+                break;
+            }
+        }
+        if (won)
+            System.out.println("Congrats");
+        else
+            System.out.println("Better Luck Next Time!");
     }
 }
